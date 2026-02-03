@@ -123,15 +123,43 @@ function createButterfly() {
     butterfly.classList.add('butterfly');
     butterfly.textContent = '🦋';
     butterfly.style.left = '-50px';
-    butterfly.style.top = (20 + Math.random() * 60) + 'vh';
+    butterfly.style.top = (10 + Math.random() * 80) + 'vh';
     document.body.appendChild(butterfly);
 
     setTimeout(() => butterfly.remove(), 6000);
 }
 
-// Start butterfly spawning
-setInterval(createButterfly, 3000);
-createButterfly();
+// More butterflies! Spawn every 800ms instead of 3000ms
+setInterval(createButterfly, 800);
+// Spawn a few immediately
+for (let i = 0; i < 5; i++) {
+    setTimeout(createButterfly, i * 200);
+}
+
+// --- Music Auto-Start on ANY interaction ---
+const bgMusic = document.getElementById('bg-music');
+let musicStarted = false;
+
+function tryPlayMusic() {
+    if (!musicStarted && bgMusic) {
+        bgMusic.play().then(() => {
+            musicStarted = true;
+            // Remove listeners once music starts
+            document.removeEventListener('mousemove', tryPlayMusic);
+            document.removeEventListener('touchstart', tryPlayMusic);
+            document.removeEventListener('scroll', tryPlayMusic);
+            document.removeEventListener('click', tryPlayMusic);
+            document.removeEventListener('keydown', tryPlayMusic);
+        }).catch(() => { });
+    }
+}
+
+// Listen for ANY interaction
+document.addEventListener('mousemove', tryPlayMusic, { once: false });
+document.addEventListener('touchstart', tryPlayMusic, { once: true });
+document.addEventListener('scroll', tryPlayMusic, { once: true });
+document.addEventListener('click', tryPlayMusic, { once: true });
+document.addEventListener('keydown', tryPlayMusic, { once: true });
 
 // Yes button click
 yesBtn.addEventListener('click', () => {
