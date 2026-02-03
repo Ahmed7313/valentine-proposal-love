@@ -205,11 +205,19 @@ noBtn.style.left = '60%';
 noBtn.style.top = '55%';
 
 function moveButton() {
-    const maxW = window.innerWidth - 80;
-    const maxH = window.innerHeight - 40;
+    const btnWidth = noBtn.offsetWidth || 60;
+    const btnHeight = noBtn.offsetHeight || 30;
+    const padding = 20; // Keep away from edges
+
+    const maxW = window.innerWidth - btnWidth - padding;
+    const maxH = window.innerHeight - btnHeight - padding;
+
+    const newX = Math.max(padding, Math.random() * maxW);
+    const newY = Math.max(padding, Math.random() * maxH);
+
     noBtn.style.position = 'fixed';
-    noBtn.style.left = Math.random() * maxW + 'px';
-    noBtn.style.top = Math.random() * maxH + 'px';
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top = newY + 'px';
 }
 
 noBtn.addEventListener('mouseover', moveButton);
