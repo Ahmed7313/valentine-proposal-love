@@ -14,66 +14,134 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #000;
+    background: linear-gradient(135deg, #1a0a0a 0%, #2d1f2f 50%, #1a0a0a 100%);
 }
 
+/* Professional Photo Collage */
 .background-collage {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    /* 5 images side by side? Or maybe nicer layout */
-    /* Let's do 3 columns top, 2 bottom? Grid logic in JS? Or just CSS */
-    /* Let's try flexible: */
-    display: flex;
-    flex-wrap: wrap;
     z-index: -2;
-    opacity: 0.6;
-    transition: opacity 1s ease-in-out;
-}
-
-.background-collage.fade-out {
-    opacity: 0;
+    overflow: hidden;
 }
 
 .collage-item {
+    position: absolute;
     background-size: cover;
     background-position: center;
-    width: 33.33%;
-    /* 3 images top row */
-    height: 50%;
-    animation: zoomInOut 20s infinite alternate ease-in-out;
-    flex-grow: 1;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    animation: fadeInFloat 2s ease forwards;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Make last 2 items 50% width to fill bottom row nicely */
-.collage-item:nth-child(4),
-.collage-item:nth-child(5) {
-    width: 50%;
-}
-
-
-
-/* Optional: vary animations slightly for new items? */
-.collage-item:nth-child(odd) {
-    animation-duration: 25s;
-}
-
-.collage-item:nth-child(even) {
-    animation-duration: 20s;
-}
-
-@keyframes zoomInOut {
+/* Keyframe for appearance */
+@keyframes fadeInFloat {
     0% {
-        transform: scale(1);
+        opacity: 0;
+        transform: scale(0.8) translateY(30px);
     }
 
     100% {
-        transform: scale(1.1);
+        opacity: 1;
+        transform: scale(1) translateY(0);
     }
+}
+
+/* Floating animation variants */
+@keyframes floatSlow {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(10px, -15px) rotate(1deg);
+    }
+
+    50% {
+        transform: translate(-5px, -25px) rotate(-1deg);
+    }
+
+    75% {
+        transform: translate(-15px, -10px) rotate(0.5deg);
+    }
+}
+
+@keyframes floatMedium {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    33% {
+        transform: translate(-15px, -20px) rotate(-1.5deg);
+    }
+
+    66% {
+        transform: translate(15px, -10px) rotate(1.5deg);
+    }
+}
+
+@keyframes floatFast {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(8px, -12px) scale(1.02);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 10px 40px rgba(255, 77, 109, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 15px 50px rgba(255, 77, 109, 0.5);
+    }
+}
+
+/* Size classes */
+.size-xl {
+    width: 35vw;
+    height: 40vh;
+    animation: fadeInFloat 2s ease forwards, floatSlow 12s ease-in-out infinite;
+}
+
+.size-lg {
+    width: 28vw;
+    height: 32vh;
+    animation: fadeInFloat 2s ease forwards, floatMedium 10s ease-in-out infinite;
+}
+
+.size-md {
+    width: 22vw;
+    height: 25vh;
+    animation: fadeInFloat 2s ease forwards, floatFast 8s ease-in-out infinite;
+}
+
+.size-sm {
+    width: 16vw;
+    height: 18vh;
+    animation: fadeInFloat 2s ease forwards, floatSlow 15s ease-in-out infinite;
+}
+
+.collage-item:hover {
+    transform: scale(1.05);
+    z-index: 5;
+    box-shadow: 0 20px 60px rgba(255, 77, 109, 0.4);
 }
 
 .overlay {
@@ -82,31 +150,46 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255, 192, 203, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.6) 100%);
     z-index: -1;
-    backdrop-filter: blur(3px);
+    pointer-events: none;
 }
 
 .container {
     text-align: center;
-    z-index: 1;
+    z-index: 10;
     color: var(--white);
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 2.5rem 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(255, 77, 109, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     max-width: 90%;
 }
 
 .question {
     font-family: 'Dancing Script', cursive;
-    font-size: 4rem;
+    font-size: 3.5rem;
     margin-bottom: 2rem;
     color: var(--white);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    animation: pulse 2s infinite;
+    animation: questionPulse 3s ease-in-out infinite;
+}
+
+@keyframes questionPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    50% {
+        transform: scale(1.02);
+        text-shadow: 2px 2px 20px rgba(255, 77, 109, 0.5);
+    }
 }
 
 .buttons {
@@ -115,73 +198,25 @@ body {
     align-items: center;
     gap: 2rem;
     position: relative;
-    /* For absolute positioning of No button if needed */
-    height: 150px;
-    /* Give some space */
+    min-height: 150px;
 }
 
-.heart-btn {
-    background-color: var(--primary-color);
-    color: white;
-    font-size: 2rem;
-    border: none;
-    cursor: pointer;
-    width: 150px;
-    height: 130px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Dancing Script', cursive;
-    transition: transform 0.3s;
-
-    /* Heart Shape */
-    position: relative;
-    /* Using pseudo-elements for heart shape or clip-path */
-    /* Simple SVG mask or clip-path is better, but CSS shapes work too. */
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    /* Actually clip-path polygon for a heart is complex. Let's use a simpler masking or just a heart image/svg background. 
-       Or SVG path */
-
-    /* Let's try separate approach for shape: using ::before/::after or just a big emoji? 
-       The user asked for "Yes shaped like a heart". */
-
-    /* Resetting clip-path for a moment to use a better CSS heart technique */
-    clip-path: none;
-    background-color: transparent;
-}
-
-.heart-btn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--primary-color);
-    transform: rotate(45deg);
-    border-radius: 20px;
-    z-index: -1;
-    /* This makes a diamond/square... let's do the classic CSS heart */
-}
-
-/* Redoing heart button properly */
+/* Heart Button */
 .heart-btn {
     position: relative;
     width: 120px;
     height: 100px;
     background-color: var(--primary-color);
     border-radius: 50px 50px 0 0;
-    /* Remove top corners */
     transform: rotate(-45deg);
     transform-origin: center;
     margin: 30px;
-    /* Spacing */
-    box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 30px rgba(255, 77, 109, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     animation: heartbeat 1.5s infinite;
-    text-decoration: none;
+    border: none;
     cursor: pointer;
 }
 
@@ -209,53 +244,25 @@ body {
     position: absolute;
     z-index: 10;
     color: white;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-family: 'Dancing Script', cursive;
     transform: rotate(45deg);
-    /* Counteract button rotation */
     width: 100%;
     text-align: center;
     top: 15px;
-    /* Adjust text position */
     left: 15px;
-}
-
-
-.no-btn {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 50px;
-    font-size: 1rem;
-    cursor: not-allowed;
-    position: absolute;
-    /* Allows movement */
-    transition: all 0.2s ease;
-}
-
-/* Animations */
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes heartbeat {
-    0% {
+
+    0%,
+    100% {
         transform: rotate(-45deg) scale(1);
     }
 
     15% {
-        transform: rotate(-45deg) scale(1.1);
+        transform: rotate(-45deg) scale(1.15);
     }
 
     30% {
@@ -266,86 +273,164 @@ body {
         transform: rotate(-45deg) scale(1.1);
     }
 
-    60% {
-        transform: rotate(-45deg) scale(1);
-    }
-
+    60%,
     100% {
         transform: rotate(-45deg) scale(1);
     }
 }
 
+.no-btn {
+    background-color: rgba(100, 100, 100, 0.5);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    cursor: not-allowed;
+    position: absolute;
+    transition: all 0.15s ease;
+    backdrop-filter: blur(5px);
+}
+
 #success-message {
     margin-top: 2rem;
+}
+
+#success-message h2 {
     font-family: 'Dancing Script', cursive;
-    font-size: 3rem;
-    color: var(--primary-color);
-    text-shadow: 2px 2px 0px #fff;
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 4rem;
+    color: #ff0a54;
+    text-shadow: 3px 3px 0px #fff, 6px 6px 0px rgba(255, 77, 109, 0.3);
+    animation: successBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes successBounce {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .hidden {
     display: none;
 }
 
-100% {
-    transform: scale(1);
-    opacity: 1;
-}
-}
-
 /* Butterfly Animation */
 .butterfly {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODg1ZWQ0M2EzMDlhZjFhNDQ1ODBiN2YzYTI4ZDY5NjFhN2Q2ZDY5NiZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/L3F9u9dvy5Gxi/giphy.gif');
-    /* Simple animated butterfly GIF or pixel art */
-    /* Alternatively uses emojis or simple CSS shapes? A GIF is safer for "animation" feel quickly */
+    position: fixed;
+    font-size: 1.5rem;
+    z-index: 8;
     pointer-events: none;
-    z-index: 10;
-    transition: transform 0.2s linear;
+    animation: butterflyFly 6s ease-in-out infinite;
+    opacity: 0.8;
 }
 
-/* Strawberry Class for the final explosion */
+@keyframes butterflyFly {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: translate(100px, -80px) rotate(15deg);
+    }
+
+    90% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(200px, 0) rotate(0deg);
+        opacity: 0;
+    }
+}
+
+/* Strawberry Rain */
 .strawberry {
     position: fixed;
-    font-size: 3rem;
+    font-size: 2.5rem;
     z-index: 1000;
     pointer-events: none;
-    animation: fall linear forwards;
+    animation: strawberryFall linear forwards;
 }
 
-@keyframes fall {
-    to {
-        transform: translateY(110vh) rotate(360deg);
+@keyframes strawberryFall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
     }
-}
 
-#success-message h2 {
-    font-size: 5rem;
-    color: #ff0a54;
-    text-shadow: 4px 4px 0px #fff;
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-
-    0%,
-    20%,
-    50%,
-    80%,
     100% {
-        transform: translateY(0);
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0.5;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .question {
+        font-size: 2.5rem;
     }
 
-    40% {
-        transform: translateY(-30px);
+    .container {
+        padding: 1.5rem 2rem;
     }
 
-    60% {
-        transform: translateY(-15px);
+    .heart-btn {
+        width: 90px;
+        height: 75px;
+    }
+
+    .heart-btn::before,
+    .heart-btn::after {
+        width: 90px;
+        height: 90px;
+    }
+
+    .heart-btn::before {
+        top: -45px;
+    }
+
+    .heart-btn::after {
+        left: 45px;
+    }
+
+    .heart-btn span {
+        font-size: 1.4rem;
+        top: 10px;
+        left: 10px;
+    }
+
+    .size-xl {
+        width: 60vw;
+        height: 30vh;
+    }
+
+    .size-lg {
+        width: 50vw;
+        height: 25vh;
+    }
+
+    .size-md {
+        width: 45vw;
+        height: 22vh;
+    }
+
+    .size-sm {
+        width: 40vw;
+        height: 18vh;
     }
 }

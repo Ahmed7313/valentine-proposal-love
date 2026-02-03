@@ -2,34 +2,8 @@ const noBtn = document.getElementById('no-btn');
 const yesBtn = document.getElementById('yes-btn');
 const successMessage = document.getElementById('success-message');
 const container = document.getElementById('collage-container');
-const musicToggle = document.getElementById('music-toggle');
-const bgMusic = document.getElementById('bg-music');
 
-// --- Music Logic ---
-musicToggle.addEventListener('click', () => {
-    if (bgMusic.paused) {
-        bgMusic.play();
-        musicToggle.textContent = "🔇 Pause Music";
-    } else {
-        bgMusic.pause();
-        musicToggle.textContent = "🎵 Play Music";
-    }
-});
-
-// Try auto-play on first user interaction if blocked
-document.body.addEventListener('click', () => {
-    if (bgMusic.paused) {
-        bgMusic.play().then(() => {
-            musicToggle.textContent = "🔇 Pause Music";
-        }).catch(e => console.log("Audio autoplay prevented"));
-    }
-}, { once: true });
-
-
-// --- Slideshow Logic ---
-// --- Slideshow Logic ---
-// We have photo1-20 and then WhatsApp images. 
-// Hardcoding the WhatsApp filenames found in directory listing to ensure we get them all.
+// --- All Photos ---
 const extraPhotos = [
     "WhatsApp Image 2026-02-03 at 8.45.41 PM (1).jpeg",
     "WhatsApp Image 2026-02-03 at 8.45.41 PM.jpeg",
@@ -51,144 +25,171 @@ const extraPhotos = [
 
 function generatePhotoSources() {
     const photos = [];
-    // Existing 20 photos
     for (let i = 1; i <= 20; i++) {
         photos.push(`assets/photo${i}.jpg`);
     }
-    // Add WhatsApp photos
     extraPhotos.forEach(p => photos.push(`assets/${p}`));
     return photos;
 }
 
 const allPhotos = generatePhotoSources();
-const totalPhotos = allPhotos.length;
-const photosPerBatch = totalPhotos; // "Show them all in the background at first" - maybe all?
-// If fitting 36 photos, we need a dense grid.
-// Let's adapt render logic to show ALL photos if requested, or just a lot.
-// "Show them all... at first". Let's show all in a grid.
 
-function renderAll() {
+// Shuffle array
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+// Size classes for variety
+const sizeClasses = ['size-xl', 'size-lg', 'size-md', 'size-sm'];
+
+// Generate random positions that fill the screen
+function generatePositions(count) {
+    const positions = [];
+    const cols = 5;
+    const rows = Math.ceil(count / cols);
+
+    for (let i = 0; i < count; i++) {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+
+        // Base position with some randomness
+        const baseX = (col / cols) * 100;
+        const baseY = (row / rows) * 100;
+
+        // Add randomness but keep within bounds
+        const x = Math.max(0, Math.min(85, baseX + (Math.random() * 15 - 7.5)));
+        const y = Math.max(0, Math.min(85, baseY + (Math.random() * 15 - 7.5)));
+
+        positions.push({ x, y });
+    }
+
+    return shuffle(positions);
+}
+
+// Render all photos with varying sizes and positions
+function renderPhotos() {
     container.innerHTML = '';
-    // Adjust grid for all photos?
-    // Let's make items smaller to fit
-    container.style.display = 'flex';
-    container.style.flexWrap = 'wrap';
+    const shuffledPhotos = shuffle([...allPhotos]);
+    const positions = generatePositions(shuffledPhotos.length);
 
-    allPhotos.forEach(src => {
+    shuffledPhotos.forEach((src, index) => {
         const div = document.createElement('div');
         div.classList.add('collage-item');
-        // Encode URI to handle spaces in filenames
-        const encodedSrc = encodeURI(src);
-        div.style.backgroundImage = `url('${encodedSrc}')`;
-        // Override width for "Show All" mode
-        div.style.width = '16.66%'; // 6 across?
-        div.style.height = '20%';   // 5 rows?
+
+        // Assign size class - more large ones for visual interest
+        const sizeIndex = index < 4 ? 0 : index < 10 ? 1 : index < 20 ? 2 : 3;
+        div.classList.add(sizeClasses[sizeIndex]);
+
+        // Position
+        const pos = positions[index] || { x: Math.random() * 80, y: Math.random() * 80 };
+        div.style.left = pos.x + '%';
+        div.style.top = pos.y + '%';
+
+        // Stagger animation delay for elegant appearance
+        div.style.animationDelay = (index * 0.1) + 's';
+
+        // Set background
+        div.style.backgroundImage = `url('${encodeURI(src)}')`;
+
+        // Random z-index for depth
+        div.style.zIndex = Math.floor(Math.random() * 5);
+
         container.appendChild(div);
     });
 }
 
-// "and then replace them in a swift animation with a new one"
-// This usage suggests a slideshow might still be desired, OR "Show all" -> "Effect" -> "New set"?
-// The user said: "show them all in the background at first, in a style and animation"
-// Maybe shuffling them?
-// Let's stick to the slideshow batch logic but maybe bigger batches? 
-// Or actually render ALL and just animate their positions? 
-// Let's keep the Slideshow logic but make it random shuffle of all images.
+// Periodically shuffle and move photos
+function animatePhotos() {
+    const items = document.querySelectorAll('.collage-item');
 
-let currentIndex = 0;
-function renderBatch() { // reusing function name but logic updated
-    // Let's show 9 at a time for better visibility? Or 15?
-    // User said "show them all... at first". 
-    // I'll render ALL 36 at once.
-
-    // Actually, let's stick to the previous logic but use all photos
-    renderAll();
-}
-
-// Butterfly Logic
-function createButterflies() {
-    setInterval(() => {
-        const b = document.createElement('div');
-        b.classList.add('butterfly');
-        b.style.left = Math.random() * 100 + 'vw';
-        b.style.top = Math.random() * 100 + 'vh';
-        document.body.appendChild(b);
-
-        // Move it
+    items.forEach((item, i) => {
+        // Random new position with smooth transition
         setTimeout(() => {
-            b.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px)`;
-            b.style.opacity = 0;
-        }, 100);
-
-        setTimeout(() => b.remove(), 2000);
-    }, 500);
+            const newX = Math.random() * 80;
+            const newY = Math.random() * 80;
+            item.style.left = newX + '%';
+            item.style.top = newY + '%';
+        }, i * 100);
+    });
 }
-createButterflies();
 
-// Yes Logic
+// Create butterflies
+function createButterfly() {
+    const butterfly = document.createElement('div');
+    butterfly.classList.add('butterfly');
+    butterfly.textContent = '🦋';
+    butterfly.style.left = '-50px';
+    butterfly.style.top = (20 + Math.random() * 60) + 'vh';
+    document.body.appendChild(butterfly);
+
+    setTimeout(() => butterfly.remove(), 6000);
+}
+
+// Start butterfly spawning
+setInterval(createButterfly, 3000);
+createButterfly();
+
+// Yes button click
 yesBtn.addEventListener('click', () => {
-    // Hide buttons
     document.querySelector('.buttons').style.display = 'none';
     document.querySelector('.question').style.display = 'none';
 
     successMessage.classList.remove('hidden');
-    // Update Text
     successMessage.innerHTML = '<h2>Love You Batta ❤️</h2>';
 
-    // Strawberry Rain
-    const duration = 5000;
+    // Strawberry rain
+    const duration = 8000;
     const end = Date.now() + duration;
 
-    (function frame() {
-        // Create strawberry
+    function spawnStrawberry() {
         const s = document.createElement('div');
         s.classList.add('strawberry');
-        s.textContent = '🍓'; // Big strawberry emoji
+        s.textContent = '🍓';
         s.style.left = Math.random() * 100 + 'vw';
-        s.style.top = '-50px';
-        s.style.animationDuration = (Math.random() * 2 + 2) + 's'; // 2-4s fall
+        s.style.top = '-60px';
+        s.style.animationDuration = (2 + Math.random() * 3) + 's';
         document.body.appendChild(s);
 
+        setTimeout(() => s.remove(), 5000);
+
         if (Date.now() < end) {
-            requestAnimationFrame(frame);
+            setTimeout(spawnStrawberry, 50);
         }
-    }());
+    }
+    spawnStrawberry();
+
+    // Confetti too
+    if (typeof confetti !== 'undefined') {
+        confetti({
+            particleCount: 150,
+            spread: 100,
+            origin: { y: 0.6 }
+        });
+    }
 });
 
-// Runaway Logic (Keep existing)
-noBtn.style.position = 'absolute'; // Ensure absolute
-noBtn.addEventListener('mouseover', moveButton);
-noBtn.addEventListener('click', moveButton);
+// Runaway "No" button
+noBtn.style.left = '60%';
+noBtn.style.top = '55%';
 
 function moveButton() {
-    const containerRect = document.querySelector('.container').getBoundingClientRect();
-    const btnRect = noBtn.getBoundingClientRect();
-
-    // Calculate new random position within the window, keeping it somewhat reachable but elusive
-    // or just within the container? Window is funnier.
-
-    const maxWid = window.innerWidth - btnRect.width;
-    const maxHei = window.innerHeight - btnRect.height;
-
-    const randomX = Math.floor(Math.random() * maxWid);
-    const randomY = Math.floor(Math.random() * maxHei);
-
-    noBtn.style.position = 'fixed'; // Break out of container flow
-    noBtn.style.left = randomX + 'px';
-    noBtn.style.top = randomY + 'px';
+    const maxW = window.innerWidth - 80;
+    const maxH = window.innerHeight - 40;
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = Math.random() * maxW + 'px';
+    noBtn.style.top = Math.random() * maxH + 'px';
 }
 
-// Initial Render
-renderAll();
-// Optional: Swap images randomly every few seconds for "animation" without clearing all
-setInterval(() => {
-    const items = document.querySelectorAll('.collage-item');
-    if (items.length > 0) {
-        const randomItem = items[Math.floor(Math.random() * items.length)];
-        const randomPhoto = allPhotos[Math.floor(Math.random() * allPhotos.length)];
-        randomItem.style.backgroundImage = `url('${encodeURI(randomPhoto)}')`;
-        // Add a pop effect?
-        randomItem.style.transform = "scale(0.8)";
-        setTimeout(() => randomItem.style.transform = "scale(1)", 500);
-    }
-}, 500); // Fast swapping
+noBtn.addEventListener('mouseover', moveButton);
+noBtn.addEventListener('touchstart', moveButton);
+noBtn.addEventListener('click', moveButton);
+
+// Initialize
+renderPhotos();
+
+// Shuffle positions every 8 seconds for dynamic feel
+setInterval(animatePhotos, 8000);
