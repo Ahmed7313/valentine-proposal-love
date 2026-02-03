@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Be My Valentine?</title>
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap"
         rel="stylesheet">
@@ -13,29 +13,19 @@
 </head>
 
 <body>
-    <div class="background-collage">
-        <div class="collage-item" style="background-image: url('assets/photo1.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo2.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo3.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo4.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo5.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo6.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo7.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo8.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo9.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo10.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo11.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo12.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo13.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo14.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo15.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo11.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo12.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo13.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo14.jpg')"></div>
-        <div class="collage-item" style="background-image: url('assets/photo15.jpg')"></div>
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/02/07/audio_18d05ec068.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="background-collage" id="collage-container">
+        <!-- Images will be injected by JS -->
     </div>
     <div class="overlay"></div>
+
+    <button id="music-toggle" class="music-btn"
+        style="position: absolute; top: 20px; right: 20px; z-index: 100; padding: 10px; background: rgba(255,255,255,0.3); color: white; border: 1px solid white; cursor: pointer; border-radius: 5px;">🎵
+        Play Music</button>
 
     <div class="container">
         <h1 class="question">Will you be my Valentine?</h1>
@@ -48,7 +38,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=3"></script>
+    <script src="script.js?v=4"></script>
 </body>
 
 </html>
