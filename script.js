@@ -77,7 +77,9 @@ function renderAll() {
     allPhotos.forEach(src => {
         const div = document.createElement('div');
         div.classList.add('collage-item');
-        div.style.backgroundImage = `url('${src}')`;
+        // Encode URI to handle spaces in filenames
+        const encodedSrc = encodeURI(src);
+        div.style.backgroundImage = `url('${encodedSrc}')`;
         // Override width for "Show All" mode
         div.style.width = '16.66%'; // 6 across?
         div.style.height = '20%';   // 5 rows?
@@ -184,7 +186,7 @@ setInterval(() => {
     if (items.length > 0) {
         const randomItem = items[Math.floor(Math.random() * items.length)];
         const randomPhoto = allPhotos[Math.floor(Math.random() * allPhotos.length)];
-        randomItem.style.backgroundImage = `url('${randomPhoto}')`;
+        randomItem.style.backgroundImage = `url('${encodeURI(randomPhoto)}')`;
         // Add a pop effect?
         randomItem.style.transform = "scale(0.8)";
         setTimeout(() => randomItem.style.transform = "scale(1)", 500);
