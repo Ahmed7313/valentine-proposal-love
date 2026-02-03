@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Be My Valentine?</title>
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap"
         rel="stylesheet">
@@ -13,12 +13,11 @@
 </head>
 
 <body>
-    <!-- Hidden YouTube iframe for audio (muted initially, unmuted on interaction) -->
-    <iframe id="bg-music"
-        src="https://www.youtube.com/embed/dhph7ed-pag?autoplay=1&loop=1&playlist=dhph7ed-pag&controls=0&showinfo=0&autohide=1&mute=0&enablejsapi=1"
-        allow="autoplay; encrypted-media"
-        style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
-    </iframe>
+    <!-- Background Music - Auto-play on loop -->
+    <audio id="bg-music" autoplay loop>
+        <source src="assets/background_music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <div class="background-collage" id="collage-container">
         <!-- Images will be injected by JS with varying sizes -->
@@ -36,7 +35,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
 </body>
 
 </html>
